@@ -1,0 +1,56 @@
+/***
+  Stylesheet zur funktionellen Darstellung der Websites.
+***/
+
+/* Allgemeine Stile für das gesamte HTML-Dokument */
+html {
+  font-family: Arial; /* Verwendete Schriftart */
+  text-align: center; /* Horizontaler Textausrichtungszentrierung */
+}
+
+/* Stile für die Überschrift der Seite */
+h1 {
+  color: #0F3376; /* Textfarbe in einem Blauton */
+  padding: 2vh; /* Innenabstand oben und unten (2 Prozent der Bildschirmhöhe) */
+}
+
+/* Allgemeine Stile für Absätze auf der Seite */
+p {
+  font-size: 1.2rem; /* Schriftgröße 1,2 Rem (relative Einheit) */
+  text-align: center; /* Zentriert den Text horizontal */
+}
+
+/* Stile für den Container, der die Nachrichten-Tabelle umgibt */
+#nachrichtenParagraphContainer {
+  text-align: center; /* Zentriert den Inhalt horizontal */
+}
+
+/* Stile für die Tabelle innerhalb des Containers */
+#nachrichtenParagraph {
+  display: inline-block; /* Hält die Tabelle in einer Zeile */
+  text-align: left; /* Setzt den Text innerhalb der Tabelle auf links, falls er zentriert wurde */
+}
+
+/* Stile für Elemente mit der Klasse "units" */
+.units {
+  font-size: 1rem; /* Schriftgröße 1 Rem (relative Einheit) */
+}
+
+/* Stile für Elemente mit der Klasse "coord-labels" */
+.coord-labels {
+  font-size: 1.2rem; /* Schriftgröße 1,2 Rem (relative Einheit) */
+  vertical-align: middle; /* Vertikale Ausrichtung in der Mitte */
+  padding-bottom: 15px; /* Innenabstand unten (15 Pixel) */
+  padding-right: 8px; /* Innenabstand rechts (8 Pixel) */
+}
+
+/* Stile für Links mit der Klasse "link-1" */
+.link-1 {
+  text-align: center; /* Zentriert den Link-Text horizontal */
+  vertical-align: middle; /* Vertikale Ausrichtung in der Mitte */
+}
+
+/* Stile für das Element mit der ID "hiddenLink" (versteckter Link) */
+#hiddenLink {
+  display: none; /* Versteckt das Element, indem es unsichtbar gemacht wird */
+}

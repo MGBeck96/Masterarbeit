@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Koordinaten des Roboters</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Koordinaten des Roboters</h1>
+
+    <!-- Buttons für Home, Demo-Programm, Reset und Aufzeichnen -->
+    <p>
+        <button id="homeButton">Home</button>
+        <button id="demoButton">Demo-Programm</button>
+    </p>
+    <p><button id="resetButton">Reset</button></p>
+    <a id="hiddenLink" href="record.html">Aufzeichnen</a>
+    <p><button id="recordButton">Zeichne Programm auf</button></p>
+
+    <!-- Bereich zur Anzeige der Roboterkoordinaten -->
+    <div class="left-rob">
+        <p>
+        <!--<h2>Koordinaten des Roboters</h2>-->
+        </p>
+        <p>
+            <span class="coord-labels">X</span>
+            <span id="x-coord-l">%x-coord-l%</span>
+            <sup class="units">pt</sup>
+        </p>
+        <p>
+            <span class="coord-labels">Y</span>
+            <span id="y-coord-l">%y-coord-l%</span>
+            <sup class="units">pt</sup>
+        </p>
+        <p>
+            <span class="coord-labels">Z</span>
+            <span id="z-coord-l">%z-coord-l%</span>
+            <sup class="units">pt</sup>
+        </p>
+    </div>
+</body>
+
+<script>
+    /*
+    Dieses Script erstellt XMLHTTPRequests, mit denen die Roboter-Koordinaten vom Webserver auf dem ESP32 abgefragt werden.
+    Die Buttons steuern das Programm.
+    */
+    // Variable zur Überwachung des Aufzeichnungsstatus
+    var aufzeichnen = false;
+
+    // Event-Listener für den "Home"-Button, der eine Anfrage an den Server sendet
+    homeButton.addEventListener("click", function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/home", true);
+        xhttp.send();
+    });
+
+    // Event-Listener für den "Demo-Programm"-Button
+    demoButton.addEventListener("click", function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/demo", true);
+        xhttp.send();
+    });
+
+    // Event-Listener für den "Reset"-Button
+    resetButton.addEventListener("click", function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/reset", true);
+        xhttp.send();
+    });
+
+    // Event-Listener für den "Zeichne Programm auf"-Button, der zur Seite "record.html" weiterleitet
+    recordButton.addEventListener("click", function () {
+        window.location.href = "record.html";
+    });
+    /*
+    Die Abfrage der Koordinaten als einzelne XML-Requests funktioniert (deutlich) schneller, als sie in einem Paket abzufragen
+    */
+    // Alle 200 Millisekunden die X-Koordinate vom Server abrufen und anzeigen
+    setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("x-coord-l").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/x-coord-l", true);
+        xhttp.send();
+    }, 200);
+
+    // Alle 200 Millisekunden die Y-Koordinate vom Server abrufen und anzeigen
+    setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("y-coord-l").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/y-coord-l", true);
+        xhttp.send();
+    }, 200);
+
+    // Alle 200 Millisekunden die Z-Koordinate vom Server abrufen und anzeigen
+    setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("z-coord-l").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/z-coord-l", true);
+        xhttp.send();
+    }, 200);
+
+</script>
+
+</html>

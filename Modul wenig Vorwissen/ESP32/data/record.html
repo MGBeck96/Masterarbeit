@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zeichne Programm auf</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Zeichne Programm auf</h1>
+    <a id="hiddenLink" href="coords.html" class="link-1">Koordinaten-Ausgabe</a></p>
+    <!-- Starte das Programm, wenn der Button geklickt wird -->
+    <p><button id="startButton">Starte Programm</button></p>
+    <p>
+    <h2>Roboter</h2>
+    </p>
+    <p id="nachrichtenParagraphContainer">
+        <!-- Container für die Roboter-Nachrichten -->
+    <p id="nachrichtenParagraph"></p>
+    </p>
+
+</body>
+
+<script>
+    /*
+    Dieses Script erstellt XMLHTTPRequests, mit denen die Werte vom Webserver auf dem ESP32 abgefragt werden.
+    Die Daten werden in dem HTML-Dokument als Tabelle angezeigt und entsprechend formatiert.
+    */
+    // Elemente aus dem HTML-Dokument abrufen
+    var startButton = document.getElementById("startButton");
+    var messageCounter = 0; // Initialisiere den Zähler für die Nachrichten
+
+    // Füge einen Event-Listener hinzu, um auf den Klick auf den Start-Button zu reagieren
+    startButton.addEventListener("click", function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/startProg", true);
+        xhr.send();
+        window.location.href = "coords.html"; // Weiterleitung zur Koordinaten-Seite
+    });
+
+    // Fragt alle 0.5 sec die neuen Nachrichten für die Roboter ab und gibt sie mit Zeilenumbrüchen auf der Website aus
+    function abrufenUndAnzeigen() {
+        messageCounter = 0; // Setze den Zähler zurück
+        var nachrichtenParagraph = document.getElementById("nachrichtenParagraph");
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/nachrichten", true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var nachrichtenText = xhr.responseText; // Keine JSON-Verarbeitung erforderlich
+                var daten = JSON.parse(nachrichtenText); // JSON-Daten in ein JavaScript-Array umwandeln
+
+                // Filtere die Zeilen, bei denen "angekommen" gleich true ist
+                var gefilterteDaten = daten.filter(function (zeile) {
+                    return zeile.angekommen === true;
+                });
+
+                // Lösche den vorherigen Inhalt in den Absätzen
+                nachrichtenParagraph.innerHTML = '';
+
+                // Erzeuge einen HTML-String für die gefilterten Daten und entscheide, wo sie eingetragen werden sollen
+                var htmlString = gefilterteDaten.forEach(function (zeile) {
+                    if (zeile.band === true) {
+                        // Erstelle ein Absatz-Element für Bandnachrichten
+                        var paragraphElement = document.createElement("p");
+                        paragraphElement.innerHTML = `Nachricht ${zeile.nachricht} - Starte Band`;
+                        nachrichtenParagraph.appendChild(paragraphElement);
+                    }
+                    else {
+                        // Erstelle ein Absatz-Element für Koordinatennachrichten
+                        var paragraphElement = document.createElement("p");
+                        paragraphElement.innerHTML = `Nachricht ${zeile.nachricht} - Koordinaten:`;
+
+                        // Erstelle eine Tabelle für die Koordinaten
+                        var tableElement = document.createElement("table");
+                        var tbodyElement = document.createElement("tbody");
+
+                        // Erstelle Tabellenzeilen für X, Y, Z und Saugerstatus
+                        var trElementX = document.createElement("tr");
+                        trElementX.innerHTML = `<td>X:</td><td>${zeile.x_coord.toFixed(2)}</td>`;
+                        tbodyElement.appendChild(trElementX);
+
+                        var trElementY = document.createElement("tr");
+                        trElementY.innerHTML = `<td>Y:</td><td>${zeile.y_coord.toFixed(2)}</td>`;
+                        tbodyElement.appendChild(trElementY);
+
+                        var trElementZ = document.createElement("tr");
+                        trElementZ.innerHTML = `<td>Z:</td><td>${zeile.z_coord.toFixed(2)}</td>`;
+                        tbodyElement.appendChild(trElementZ);
+
+                        var trElementVac = document.createElement("tr");
+                        trElementVac.innerHTML = `<td>Sauger:</td><td>${zeile.vac}</td>`;
+                        tbodyElement.appendChild(trElementVac);
+
+                        // Füge die Tabelle dem Absatz hinzu
+                        tableElement.appendChild(tbodyElement);
+                        paragraphElement.appendChild(tableElement);
+
+                        // Füge den Absatz dem Container hinzu
+                        nachrichtenParagraph.appendChild(paragraphElement);
+                    }
+
+                    messageCounter++; // Inkrementiere den Nachrichtenzähler
+                });
+            }
+        };
+
+        xhr.send();
+    }
+
+    // Alle 0.5 Sekunden die Funktion abrufenUndAnzeigen aufrufen
+    setInterval(abrufenUndAnzeigen, 500);
+
+</script>
+
+</html>
