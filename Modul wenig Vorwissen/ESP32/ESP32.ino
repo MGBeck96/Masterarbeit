@@ -45,8 +45,8 @@ struct AufgabenDatenSingle
 AufgabenDatenSingle aufgaben[anzahlAufgaben];
 
 #ifdef LOCAL_NETWORK
-const char *ssid = "aFRITZ!Box 7530";         // SSID des WiFi-Netzwerks
-const char *password = "77736ImBuchenfeld16"; // Passwort des WiFi-Netzwerks
+const char *ssid = "SSID";         // SSID des WiFi-Netzwerks
+const char *password = "Passwort"; // Passwort des WiFi-Netzwerks
 #endif
 #ifndef LOCAL_NETWORK
 const char *ssid = "DOBOTControllNetwork"; // SSID des WiFi-Netzwerks
